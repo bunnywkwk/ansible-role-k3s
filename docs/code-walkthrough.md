@@ -5,7 +5,7 @@ What each file does and why, briefly. Deeper reasons: `Dn` in [design-decisions.
 
 | # | File | Status |
 |---|------|--------|
-| 1 | `meta/main.yml`, `meta/argument_specs.yml` | done |
+| 1 | `meta/main.yml` | done |
 | 2 | `.yamllint`, `.ansible-lint`, `.gitignore` | done, copied from the jenkins role |
 | 3 | `defaults/main.yml`, `vars/main.yml` | done |
 | 4 | `tasks/main.yml`, `config.yml`, `install.yml`, `firewall.yml`, `argocd.yml` | done, lint clean; run on 3 RHEL 9.8 VMs 2026-11-11 (see test-results) |
@@ -36,7 +36,6 @@ pods pull 192.168.122.135:5000/... ──(registries.yaml: http)──► regist
 | File | Does | Why |
 |------|------|-----|
 | `meta/main.yml` | `bunnywkwk.k3s`, EL 9, ansible-core 2.16, no dependencies | Same rules as the other roles |
-| `meta/argument_specs.yml` | Types; `k3s_node_type` only `server` or `agent` | A typo like `k3s_node_type: worker` stops the play before anything changes |
 
 ## 2. `defaults/main.yml` and `vars/main.yml`
 

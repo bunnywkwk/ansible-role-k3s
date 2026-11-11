@@ -8,7 +8,7 @@ What each file does and why, briefly. Deeper reasons: `Dn` in [design-decisions.
 | 1 | `meta/main.yml`, `meta/argument_specs.yml` | done |
 | 2 | `.yamllint`, `.ansible-lint`, `.gitignore` | done, copied from the jenkins role |
 | 3 | `defaults/main.yml`, `vars/main.yml` | done |
-| 4 | `tasks/main.yml`, `config.yml`, `install.yml`, `firewall.yml`, `argocd.yml` | done, lint clean, not run on a VM yet |
+| 4 | `tasks/main.yml`, `config.yml`, `install.yml`, `firewall.yml`, `argocd.yml` | done, lint clean; run on 3 RHEL 9.8 VMs 2026-11-11 (see test-results) |
 | 5 | `handlers/main.yml` | done |
 | 6 | `templates/config.yaml.j2`, `registries.yaml.j2`, `argocd.yaml.j2` | done, rendered for server, agent and lone host, parsed as YAML |
 | 7 | `requirements.yml`, `VERSION`, `README.md` | done |

@@ -70,13 +70,13 @@ k3s_cluster:
 
 ```bash
 ansible-playbook playbooks/site.yml                        # rerun: changed=0
-ssh <server> sudo k3s kubectl get nodes                    # 3 nodes Ready
+ssh <server> sudo /usr/local/bin/k3s kubectl get nodes                    # 3 nodes Ready
 ```
 
 Argo CD admin password (user `admin`):
 
 ```bash
-ssh <server> "sudo k3s kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
+ssh <server> "sudo /usr/local/bin/k3s kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
 ```
 
 The lab test project is `k3s-test/` next to this repo.

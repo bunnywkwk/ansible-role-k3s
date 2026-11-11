@@ -29,7 +29,7 @@ Why the role is built this way. Format: **Decision** → **Why** → **Changed**
 
 ## D4: Two plays, server first
 
-**Decision:** the test project's `site.yml` runs the role on `k3s_server`, then on `k3s_agent`.
+**Decision:** the lab playbook (`cicd_lab_master/playbooks/main_playbook.yml`) runs the role on `k3s_server` (phase 2), then on `k3s_agent` (phase 3).
 
 **Why:** agents need a running API on 6443 to join. One play over all hosts would install the agents while the server starts; they retry, but the first run would be slower and its errors harder to read.
 

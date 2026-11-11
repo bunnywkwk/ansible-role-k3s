@@ -79,7 +79,7 @@ Argo CD admin password (user `admin`):
 ssh <server> "sudo /usr/local/bin/k3s kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
 ```
 
-The lab test project is `k3s-test/` next to this repo.
+The lab playbook that runs this role together with the others is `cicd_lab_master/` next to this repo.
 
 ## Docs
 

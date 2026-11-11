@@ -1,0 +1,19 @@
+---
+# k3s creates this folder on its first start; create it anyway so the template never depends on that (see jenkins T-J1).
+- name: "ARGOCD | Create the k3s manifests folder"
+  ansible.builtin.file:
+    path: "{{ k3s_manifests_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+
+# k3s's Helm controller sees the file and installs the chart: no helm, no kubectl here.
+# shortcut: setting k3s_argocd_enabled to false leaves Argo CD installed; uninstall by hand until needed
+- name: "ARGOCD | Write the Argo CD HelmChart manifest"
+  ansible.builtin.template:
+    src: argocd.yaml.j2
+    dest: "{{ k3s_manifests_dir }}/argocd.yaml"
+    owner: root
+    group: root
+    mode: "0600"

@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+# containerd pulls these registries over plain HTTP.
+{% if k3s_insecure_registries %}
+mirrors:
+{% for registry in k3s_insecure_registries %}
+  {{ registry | to_json }}:
+    endpoint:
+      - {{ ('http://' ~ registry) | to_json }}
+{% endfor %}
+{% else %}
+mirrors: {}
+{% endif %}

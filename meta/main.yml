@@ -1,0 +1,13 @@
+---
+galaxy_info:
+  author: bunnywkwk
+  namespace: bunnywkwk
+  role_name: k3s
+  description: k3s cluster (server + agents) on RHEL 9 with Argo CD.
+  license: MIT
+  min_ansible_version: "2.16"
+  platforms:
+    - name: EL
+      versions:
+        - "9"
+dependencies: []

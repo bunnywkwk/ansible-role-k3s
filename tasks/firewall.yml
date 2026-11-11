@@ -1,0 +1,33 @@
+---
+# From the k3s docs for RHEL: kubelet and flannel VXLAN on every node; pod and service networks trusted.
+- name: "FIREWALL | Open the node ports"
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - 10250/tcp   # kubelet (logs, exec, metrics)
+    - 8472/udp    # flannel VXLAN between nodes
+
+- name: "FIREWALL | Open the server ports"
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - 6443/tcp                          # Kubernetes API: agents join here, kubectl
+    - "{{ k3s_argocd_nodeport }}/tcp"   # Argo CD UI
+  when: k3s_node_type == 'server'
+
+- name: "FIREWALL | Trust the pod and service networks"
+  ansible.posix.firewalld:
+    zone: trusted
+    source: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop:
+    - "{{ k3s_pod_cidr }}"
+    - "{{ k3s_service_cidr }}"

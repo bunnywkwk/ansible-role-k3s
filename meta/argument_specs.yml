@@ -1,0 +1,43 @@
+---
+# Checked before any task runs: a wrong node type or type error stops the play with a clear message.
+argument_specs:
+  main:
+    short_description: k3s cluster (server + agents) on RHEL 9 with Argo CD.
+    options:
+      k3s_version:
+        type: str
+        default: "v1.37.2+k3s1"
+        description: k3s release; changing it upgrades the node.
+      k3s_node_type:
+        type: str
+        choices: [server, agent]
+        description: server or agent; default from the k3s_agent group.
+      k3s_token:
+        type: str
+        default: ""
+        no_log: true
+        description: Cluster join secret; empty = agents read the server's generated token.
+      k3s_server_url:
+        type: str
+        description: Server URL agents join, https://<server>:6443.
+      k3s_insecure_registries:
+        type: list
+        elements: str
+        default: []
+        description: Plain-HTTP registries containerd may pull from.
+      k3s_argocd_enabled:
+        type: bool
+        default: true
+        description: Install Argo CD on the server.
+      k3s_argocd_chart_version:
+        type: str
+        default: "10.17.1"
+        description: argo-cd Helm chart version.
+      k3s_argocd_nodeport:
+        type: int
+        default: 30443
+        description: NodePort for the Argo CD UI (HTTPS).
+      k3s_manage_firewall:
+        type: bool
+        default: true
+        description: Open the k3s ports in firewalld.

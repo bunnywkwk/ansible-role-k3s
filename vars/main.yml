@@ -1,0 +1,16 @@
+---
+# k3s internal fixed values (not set by users; their choices are in defaults/main.yml).
+
+k3s_bin: /usr/local/bin/k3s   # full path: sudo's secure_path on RHEL has no /usr/local/bin
+k3s_config_dir: /etc/rancher/k3s
+k3s_manifests_dir: /var/lib/rancher/k3s/server/manifests   # k3s applies every file here
+k3s_server_token_file: /var/lib/rancher/k3s/server/node-token   # written by the server on first start
+k3s_service: "{{ 'k3s-agent' if k3s_node_type == 'agent' else 'k3s' }}"   # names install.sh gives the units
+
+## Official install script, pinned to the release tag (it checks the binary's sha256)
+k3s_install_url: "https://raw.githubusercontent.com/k3s-io/k3s/{{ k3s_version | urlencode }}/install.sh"
+k3s_install_script: "/usr/local/lib/k3s-install-{{ k3s_version }}.sh"
+
+## k3s default networks, trusted in firewalld
+k3s_pod_cidr: 10.42.0.0/16
+k3s_service_cidr: 10.43.0.0/16

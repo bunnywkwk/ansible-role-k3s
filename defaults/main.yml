@@ -1,0 +1,32 @@
+---
+# k3s: a k3s cluster on RHEL 9 (one server, any number of agents) with Argo CD. Override any of these in group_vars.
+
+## Version
+
+k3s_version: "v1.37.2+k3s1"   # k3s stable channel on 2026-11-11; changing it upgrades the node
+
+## Node type and joining
+
+# Hosts in the k3s_agent group join as workers; every other host is a server (so one host alone is a 1-node cluster).
+k3s_node_type: "{{ 'agent' if inventory_hostname in groups.get('k3s_agent', []) else 'server' }}"
+
+# Cluster join secret. Empty (default): the server generates one and agents read it from the server.
+# Set it (ansible-vault) only to choose your own, e.g. to rebuild the server and keep the agents.
+k3s_token: ""
+
+# Where agents find the server: the first host of the k3s_server group.
+k3s_server_url: "https://{{ hostvars[groups['k3s_server'][0]]['ansible_host'] | default(groups['k3s_server'][0]) }}:6443"
+
+## Images
+
+k3s_insecure_registries: []   # plain-HTTP registries containerd may pull from, e.g. ["192.168.122.135:5000"]
+
+## Argo CD (installed by k3s itself from a HelmChart manifest on the server)
+
+k3s_argocd_enabled: true
+k3s_argocd_chart_version: "10.17.1"   # argo-helm chart argo-cd (Argo CD v3.6.1)
+k3s_argocd_nodeport: 30443            # https://<server>:<port> for the UI
+
+## Firewall
+
+k3s_manage_firewall: true   # open the k3s ports in firewalld (k3s docs for RHEL)

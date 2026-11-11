@@ -1,0 +1,19 @@
+---
+# Config first: install.sh starts k3s, and the first start must already read config.yaml.
+- name: Write the k3s configuration
+  ansible.builtin.import_tasks:
+    file: config.yml
+
+- name: Install and run k3s
+  ansible.builtin.import_tasks:
+    file: install.yml
+
+- name: Open the k3s ports
+  when: k3s_manage_firewall
+  ansible.builtin.import_tasks:
+    file: firewall.yml
+
+- name: Install Argo CD
+  when: k3s_node_type == 'server' and k3s_argocd_enabled
+  ansible.builtin.import_tasks:
+    file: argocd.yml

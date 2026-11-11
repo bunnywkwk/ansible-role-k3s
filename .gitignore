@@ -1,0 +1,3 @@
+# Molecule and ansible-compat caches
+.ansible/
+.cache/

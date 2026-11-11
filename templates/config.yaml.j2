@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+# Read by k3s server and k3s agent at every start (same keys as the command-line flags).
+{% if k3s_node_type == 'agent' %}
+server: {{ k3s_server_url | to_json }}
+{% endif %}
+{% if k3s_token %}
+token: {{ k3s_token | to_json }}
+{% endif %}
+# Node name = inventory name: minimal VMs often share the hostname localhost.localdomain, and two nodes with one name cannot join.
+node-name: {{ inventory_hostname | to_json }}
+selinux: true
+{% if k3s_node_type == 'server' %}
+write-kubeconfig-mode: "0600"
+{% endif %}

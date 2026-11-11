@@ -1,0 +1,33 @@
+---
+- name: "INSTALL | Read the installed k3s version"
+  ansible.builtin.command:
+    cmd: "{{ k3s_bin }} --version"
+  register: k3s_installed
+  changed_when: false
+  failed_when: false
+
+- name: "INSTALL | Download the pinned k3s install script"
+  ansible.builtin.get_url:
+    url: "{{ k3s_install_url }}"
+    dest: "{{ k3s_install_script }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+# Runs only when k3s is missing or another version: install.sh downloads the binary (sha256 checked),
+# installs container-selinux and k3s-selinux on RHEL, writes the systemd unit and starts it.
+# Agents read server and token from config.yaml, so only the command is passed here.
+- name: "INSTALL | Install k3s"
+  ansible.builtin.command:
+    cmd: "sh {{ k3s_install_script }}"
+  environment:
+    INSTALL_K3S_VERSION: "{{ k3s_version }}"
+    INSTALL_K3S_EXEC: "{{ k3s_node_type }}"
+  when: k3s_version not in (k3s_installed.stdout | default(''))
+  changed_when: true
+
+- name: "INSTALL | Start and enable k3s"
+  ansible.builtin.systemd_service:
+    name: "{{ k3s_service }}"
+    state: started
+    enabled: true

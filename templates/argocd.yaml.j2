@@ -1,0 +1,18 @@
+# {{ ansible_managed }}
+# k3s's Helm controller installs this chart and keeps it at this version.
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: argocd
+  namespace: kube-system
+spec:
+  repo: https://argoproj.github.io/argo-helm
+  chart: argo-cd
+  version: {{ k3s_argocd_chart_version | to_json }}
+  targetNamespace: argocd
+  createNamespace: true
+  valuesContent: |-
+    server:
+      service:
+        type: NodePort
+        nodePortHttps: {{ k3s_argocd_nodeport }}

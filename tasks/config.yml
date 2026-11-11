@@ -1,0 +1,43 @@
+---
+# No token given: agents read the one the server generated on its first start (what you would copy by hand).
+- name: "CONFIG | Read the cluster token from the server"
+  ansible.builtin.slurp:
+    src: "{{ k3s_server_token_file }}"
+  delegate_to: "{{ groups['k3s_server'][0] }}"
+  register: k3s_server_token
+  no_log: true
+  when: k3s_node_type == 'agent' and not k3s_token
+
+- name: "CONFIG | Use the server's token"
+  ansible.builtin.set_fact:
+    k3s_token: "{{ k3s_server_token.content | b64decode | trim }}"
+  no_log: true
+  when: k3s_server_token is not skipped
+
+- name: "CONFIG | Create the k3s config folder"
+  ansible.builtin.file:
+    path: "{{ k3s_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+# 0600: holds the token. diff: false keeps it out of --diff output.
+- name: "CONFIG | Write config.yaml"
+  ansible.builtin.template:
+    src: config.yaml.j2
+    dest: "{{ k3s_config_dir }}/config.yaml"
+    owner: root
+    group: root
+    mode: "0600"
+  diff: false
+  notify: Restart k3s
+
+- name: "CONFIG | Write registries.yaml (plain-HTTP registries)"
+  ansible.builtin.template:
+    src: registries.yaml.j2
+    dest: "{{ k3s_config_dir }}/registries.yaml"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart k3s
